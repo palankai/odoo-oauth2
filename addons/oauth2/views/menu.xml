@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <menuitem id="menu_oauth2" name="Authentication"
+            parent="base.menu_administration" sequence="5" />
+        <menuitem id="menu_consumer" name="Consumers"
+            parent="menu_oauth2"
+            action="oauth2_consumer_list_action" />
+    </data>
+</openerp>
