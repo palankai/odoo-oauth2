@@ -1,0 +1,8 @@
+oauth2:
+  build: odoo/
+  ports:
+    - "8069:8069"
+  volumes:
+    - "addons:/mnt/extra-addons"
+    - "odoo/config:/etc/odoo"
+
