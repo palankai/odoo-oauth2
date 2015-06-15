@@ -1,6 +1,6 @@
 import random
 
-from . import conf
+import conf
 
 
 def create_token(token_length=conf.DEFAULT_TOKEN_LENGTH):
