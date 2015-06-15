@@ -7,7 +7,7 @@
     'category': "Website",
     'depends': ['base'],
     'data': [
-        "views/menu.xml",
         "views/consumer.xml",
+        "views/menu.xml",
     ],
 }
