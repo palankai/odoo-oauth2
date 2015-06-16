@@ -15,7 +15,7 @@ class Authentication(http.Controller):
         headers = {}
         response = None
         try:
-            response = self.process(request)
+            response = self.process()
         except AuthenticationException, ex:
             response = ex.to_dict()
             status = ex.status
@@ -23,20 +23,19 @@ class Authentication(http.Controller):
 
         return self.response(response, status, headers)
 
-    def process(self, r):
-        if self.get_param(r, "grant_type") == "password":
-            return self.password_auth(r)
-        if self.get_param(r, "grant_type") == "refresh_token":
-            return self.refresh_token(r)
+    def process(self):
+        if self.get_post("grant_type") == "password":
+            return self.password_auth()
+        if self.get_post("grant_type") == "refresh_token":
+            return self.refresh_token()
         raise InvalidRequestException()
 
-    def get_param(self, r, name):
-        return r.params.get("grant_type", "None")
-
-    def password_auth(self, r):
+    def password_auth(self):
+        if not self.get_header("authorization"):
+            raise InvalidRequestException()
         return "Pass"
 
-    def refresh_token(self, r):
+    def refresh_token(self):
         return "Refresh"
 
     def response(self, response, status, headers):
@@ -51,3 +50,10 @@ class Authentication(http.Controller):
             status=status,
             headers=http_headers
         )
+
+    def get_post(self, name):
+        return request.httprequest.form.get(name)
+
+    def get_header(self, name):
+        return request.httprequest.headers.get(name)
+
