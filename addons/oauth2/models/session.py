@@ -1,17 +1,15 @@
+import datetime
 from openerp import models, fields
-from openerp import _
 
-from .. import conf
 from .. import func
-
 
 class Session(models.Model):
     _name = 'oauth2.session'
     _log_access = False
 
-    token = fields.Char(size=255, required=True)
-    created = fields.Datetime(required=True)
-    expires_at = fields.Datetime(required=True)
+    token = fields.Char(size=255, required=True, default=lambda self: func.create_token())
+    created = fields.Datetime(required=True, default=lambda self: datetime.datetime.utcnow())
+    expires_at = fields.Datetime(required=True, default=lambda self: datetime.datetime.utcnow()+datetime.timedelta(hours=1))
     refresh_token = fields.Char(size=255)
     user_id = fields.Many2one('res.users', required=True)
     consumer_id = fields.Many2one('oauth2.consumer', required=True)
