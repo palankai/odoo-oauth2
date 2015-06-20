@@ -11,7 +11,7 @@ class Session(models.Model):
     token = fields.Char(size=255, required=True, default=lambda self: func.create_token())
     created = fields.Datetime(required=True, default=lambda self: datetime.datetime.utcnow())
     expires_at = fields.Datetime(required=True, default=lambda self: datetime.datetime.utcnow()+datetime.timedelta(hours=1))
-    refresh_token = fields.Char(size=255)
+    refresh_token = fields.Char(size=255, default=lambda self: func.create_token())
     user_id = fields.Many2one('res.users', required=True, ondelete="cascade")
     consumer_id = fields.Many2one('oauth2.consumer', required=True, ondelete="cascade")
     scope = fields.Text(required=False)
@@ -29,3 +29,12 @@ class Session(models.Model):
         ),
     ]
 
+    def get_expires_in(self):
+        expires_at = fields.Datetime.from_string(self.expires_at)
+        return expires_at - datetime.datetime.utcnow()
+
+    def refresh(self):
+        self.write({
+            "token": func.create_token(),
+            "expires_at": datetime.datetime.utcnow()+datetime.timedelta(hours=1)
+        })

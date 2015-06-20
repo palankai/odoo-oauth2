@@ -42,10 +42,25 @@ class Authentication(http.Controller):
             "user_id": user.id,
             "consumer_id": consumer.id,
         })
-        return session.token
+        return dict(
+            access_token=session.token,
+            token_type="Bearer",
+            expires_in=int(session.get_expires_in().total_seconds()),
+            refresh_token=session.refresh_token,
+            scope=session.scope
+        )
 
     def refresh_token(self):
-        return "Refresh"
+        self.get_consumer()
+        refresh_token = self.get_post("refresh_token")
+        session = self.get_session_by_refresh_token(refresh_token)
+        session.refresh()
+
+        return dict(
+            access_token=session.token,
+            token_type="Bearer",
+            expires_in=int(session.get_expires_in().total_seconds()),
+        )
 
     def get_consumer(self):
         key, secret = self.get_client_credentials()
@@ -79,6 +94,15 @@ class Authentication(http.Controller):
         if not assignment:
             raise InvalidGrantException()
         return assignment
+
+    def get_session_by_refresh_token(self, refresh_token):
+        Session = http.request.env['oauth2.session'].sudo()
+        session = Session.search([
+            ("refresh_token", "=", refresh_token)
+        ])
+        if not session:
+            raise InvalidGrantException()
+        return session
 
 
     def get_client_credentials(self):

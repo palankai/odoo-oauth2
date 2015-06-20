@@ -49,7 +49,7 @@ class Assignment(models.Model):
     _name = 'oauth2.assignment'
 
     user_id = fields.Many2one('res.users', required=True)
-    consumer_id = fields.Many2one('oauth2.consumer', required=False)
+    consumer_id = fields.Many2one('oauth2.consumer', required=True)
     scope = fields.Text(required=False)
     active = fields.Boolean(default=True)
 

@@ -27,6 +27,19 @@
                 </form>
             </field>
         </record>
+        <record model="ir.ui.view" id="assignment_form_view">
+            <field name="name">assignment.form</field>
+            <field name="model">oauth2.assignment</field>
+            <field name="arch" type="xml">
+                <form string="Assignment Form">
+                    <sheet>
+                        <field name="consumer_id" />
+                        <field name="user_id" />
+                        <field name="scope" />
+                    </sheet>
+                </form>
+            </field>
+        </record>
         <record model="ir.ui.view" id="consumer_tree_view">
             <field name="name">consumer.tree</field>
             <field name="model">oauth2.consumer</field>
