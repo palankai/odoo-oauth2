@@ -44,6 +44,9 @@ class Consumer(models.Model):
         ),
     ]
 
+    def is_system(self):
+        return self.type == "SYSTEM"
+
 
 class Assignment(models.Model):
     _name = 'oauth2.assignment'

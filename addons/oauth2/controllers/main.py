@@ -36,7 +36,8 @@ class Authentication(http.Controller):
     def password_auth(self):
         consumer = self.get_consumer()
         user = self.get_user()
-        self.get_assignment(user, consumer)
+        if not consumer.is_system():
+            self.get_assignment(user, consumer)
         Session = http.request.env['oauth2.session'].sudo()
         session = Session.create({
             "user_id": user.id,
