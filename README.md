@@ -14,5 +14,5 @@ you can authenticate and can access resources.
 # ToDo
 
 - [x] Client auth
-- [ ] Token refresh
+- [x] Token refresh
 - [ ] Decorator and tools for auth
