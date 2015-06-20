@@ -59,5 +59,3 @@ class InvalidScopeException(AuthenticationException):
     error = "invalid_scope"
     description = "The requested scope is invalid, unknown, malformed, or exceeds the scope granted by "
     "the resource owner."
-
-

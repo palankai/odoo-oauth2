@@ -9,10 +9,9 @@ you can authenticate and can access resources.
 ## Provides
 
 - /auth/token/ interface to authenticate
-- decorator to using the token
 
 # ToDo
 
 - [x] Client auth
 - [x] Token refresh
-- [ ] Decorator and tools for auth
+- [ ] API for applications
