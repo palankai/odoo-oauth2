@@ -1,5 +1,4 @@
 import base64
-import datetime
 import json
 
 from openerp import http
@@ -7,7 +6,7 @@ from openerp.http import request
 
 from ..exceptions import (
     InvalidRequestException, AuthenticationException, InvalidClientException,
-    InvalidGrantException
+    InvalidGrantException, InvalidScopeException
 )
 
 
@@ -19,7 +18,7 @@ class Authentication(http.Controller):
         headers = {}
         response = None
         try:
-            response = self.process_authx()
+            response = self.process_auth()
         except AuthenticationException, ex:
             response = ex.to_dict()
             status = ex.status
@@ -27,7 +26,7 @@ class Authentication(http.Controller):
 
         return self.response(response, status, headers)
 
-    def process_authx(self):
+    def process_auth(self):
         if self.get_post("grant_type") == "password":
             return self.password_auth()
         if self.get_post("grant_type") == "refresh_token":
@@ -37,6 +36,7 @@ class Authentication(http.Controller):
     def password_auth(self):
         consumer = self.get_consumer()
         user = self.get_user()
+        self.get_assignment(user, consumer)
         Session = http.request.env['oauth2.session'].sudo()
         session = Session.create({
             "user_id": user.id,
@@ -70,6 +70,17 @@ class Authentication(http.Controller):
             raise InvalidGrantException()
         return user
 
+    def get_assignment(self, user, consumer):
+        Assignment = http.request.env['oauth2.assignment'].sudo()
+        assignment = Assignment.search([
+            ("user_id", "=", user.id),
+            ("consumer_id", "=", consumer.id)
+        ])
+        if not assignment:
+            raise InvalidGrantException()
+        return assignment
+
+
     def get_client_credentials(self):
         header = self.get_header("authorization")
         if not header: raise InvalidClientException()
@@ -99,4 +110,3 @@ class Authentication(http.Controller):
 
     def get_header(self, name):
         return request.httprequest.headers.get(name)
-

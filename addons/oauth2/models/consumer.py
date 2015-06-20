@@ -28,7 +28,9 @@ class Consumer(models.Model):
     )
     redirect_uri = fields.Char(_("Redirect URI"), size=254)
     active = fields.Boolean(default=True)
-
+    assignment_ids = fields.One2many(
+        'oauth2.assignment', 'consumer_id', string="Scopes"
+    )
     _sql_constraints = [
         (
             "oauth2_consumer_unique_name",
@@ -42,3 +44,19 @@ class Consumer(models.Model):
         ),
     ]
 
+
+class Assignment(models.Model):
+    _name = 'oauth2.assignment'
+
+    user_id = fields.Many2one('res.users', required=True)
+    consumer_id = fields.Many2one('oauth2.consumer', required=False)
+    scope = fields.Text(required=False)
+    active = fields.Boolean(default=True)
+
+    _sql_constraints = [
+        (
+            "oauth2_assignment_unique_user_consumer",
+            "UNIQUE(user_id, consumer_id)",
+            _("The user, consumer pair must be unique")
+        ),
+    ]

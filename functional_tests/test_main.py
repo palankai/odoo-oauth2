@@ -35,7 +35,6 @@ class TestLoginWithClientAuth(unittest.TestCase):
             }, headers={
                 "Authorization":"basic %s" % base64.b64encode("%s:%s" % (k,s))
             })
-        print r.text
         self.assertEqual(r.status_code, 200)
 
     def create_client(self):
@@ -43,6 +42,10 @@ class TestLoginWithClientAuth(unittest.TestCase):
             "name": "FOR TEST - TO BE DELETED (%s)" % time.time(),
             "type": "SYSTEM",
             "profile": "WEB",
+        })
+        call("oauth2.assignment", "create", {
+            "user_id": 1,
+            "consumer_id": res,
         })
         client = call("oauth2.consumer", "read", res, ["key", "secret"])
         return client["key"], client["secret"]

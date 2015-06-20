@@ -3,6 +3,7 @@ from openerp import models, fields
 
 from .. import func
 
+
 class Session(models.Model):
     _name = 'oauth2.session'
     _log_access = False
@@ -11,8 +12,9 @@ class Session(models.Model):
     created = fields.Datetime(required=True, default=lambda self: datetime.datetime.utcnow())
     expires_at = fields.Datetime(required=True, default=lambda self: datetime.datetime.utcnow()+datetime.timedelta(hours=1))
     refresh_token = fields.Char(size=255)
-    user_id = fields.Many2one('res.users', required=True)
-    consumer_id = fields.Many2one('oauth2.consumer', required=True)
+    user_id = fields.Many2one('res.users', required=True, ondelete="cascade")
+    consumer_id = fields.Many2one('oauth2.consumer', required=True, ondelete="cascade")
+    scope = fields.Text(required=False)
 
     _sql_constraints = [
         (

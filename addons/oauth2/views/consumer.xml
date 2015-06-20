@@ -16,6 +16,12 @@
                             <field name="profile"/>
                             <field name="redirect_uri"/>
                             <field name="description"/>
+                            <field name="assignment_ids">
+                                <tree string="Assignments">
+                                    <field name="user_id" />
+                                    <field name="scope" />
+                                </tree>
+                            </field>
                         </group>
                     </sheet>
                 </form>
@@ -33,19 +39,12 @@
                 </tree>
             </field>
         </record>
-
-<!-- window action -->
-        <!--
-            The following tag is an action definition for a "window action",
-            that is an action opening a view or a set of views
-        -->
         <record model="ir.actions.act_window" id="oauth2_consumer_list_action">
             <field name="name">Consumer listing</field>
             <field name="res_model">oauth2.consumer</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-
     </data>
 </openerp>
 
