@@ -14,4 +14,11 @@ you can authenticate and can access resources.
 
 - [x] Client auth
 - [x] Token refresh
-- [ ] API for applications
+- [x] API for applications
+
+# Usage
+
+```python
+from openerp.addons import oauth2
+session = oauth2.get_session("token")
+```

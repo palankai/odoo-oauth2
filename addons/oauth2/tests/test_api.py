@@ -3,7 +3,7 @@ import datetime
 from openerp.exceptions import AccessDenied
 from openerp.tests import common
 
-from .. import api
+from .. import get_session
 
 
 class TestOAuth2API(common.TransactionCase):
@@ -11,19 +11,19 @@ class TestOAuth2API(common.TransactionCase):
     def test_get_session(self):
         session = self.create_session()
         token = "GENERATED"
-        api_session = api.get_session(self, token)
+        api_session = get_session(self, token)
         self.assertEqual(session.id, api_session.id)
 
     def test_get_session_with_invalid_token(self):
         token = "GENERA"
         with self.assertRaises(AccessDenied):
-            api.get_session(self, token)
+            get_session(self, token)
 
     def test_get_session_with_expired_token(self):
         session = self.create_expired_session()
         token = "GENERATED"
         with self.assertRaises(AccessDenied):
-            api.get_session(self, token)
+            get_session(self, token)
 
     def create_session(self):
         consumer = self.env["oauth2.consumer"].sudo().create({
